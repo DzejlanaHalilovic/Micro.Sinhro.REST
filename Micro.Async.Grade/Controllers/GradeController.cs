@@ -1,4 +1,5 @@
 ﻿using Micro.Async.Grade.DTOs;
+using Micro.Async.Grade.Persistance;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,13 @@ namespace Micro.Async.Grade.Controllers
     public class GradeController : ControllerBase
     {
 
-        private readonly GradeDBContext _context;
-        public GradeController(GradeDBContext context)
+        private readonly GradeDBContext context;
+        private readonly IMessageBroker messageBroker;
+
+        public GradeController(GradeDBContext context, IMessageBroker messageBroker)
         {
-            _context = context;
+            this.context = context;
+            this.messageBroker = messageBroker;
         }
         [HttpPost]
         public IActionResult Post([FromBody] GradeDTO grade)
@@ -27,6 +31,9 @@ namespace Micro.Async.Grade.Controllers
                 Value = grade.Value,
                 Date = grade.Date
             };
+            context.Grades.Add(newGrade);
+            context.SaveChanges();
+            messageBroker.Publish(newGrade);
 
 
             // implement logic to send message to message broker
