@@ -1,4 +1,5 @@
 ﻿using Micro.Sinhro.REST.APIGateway.Models;
+using Micro.Sinhro.REST.APIGateway.Persistance;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -32,5 +33,9 @@ namespace Micro.Sinhro.REST.APIGateway.Controllers
         }
 
         // da imamo servis da dodamo ocenu 
+
+
+        
+
     }
 }

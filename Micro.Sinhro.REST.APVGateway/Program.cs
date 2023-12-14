@@ -1,10 +1,12 @@
 using Micro.Sinhro.REST.APIGateway;
+using Micro.Sinhro.REST.APIGateway.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.Configure<Urls>(builder.Configuration.GetSection("Urls"));
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<IMessageBroker, MessageBroker>();
 
 
 builder.Services.AddControllers();

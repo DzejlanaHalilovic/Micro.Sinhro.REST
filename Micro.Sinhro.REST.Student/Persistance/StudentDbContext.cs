@@ -8,6 +8,7 @@ namespace Micro.Sinhro.REST.Student.Persistance
         {
         }   
         public DbSet<Models.Student> Students { get; set; }
+        public DbSet<Models.Grade> Grades { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,5 +1,7 @@
-﻿using Micro.Sinhro.REST.Student.Persistance;
+﻿using Micro.Sinhro.REST.APIGateway.Persistance;
+using Micro.Sinhro.REST.Student.Persistance;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Micro.Sinhro.REST.Student.Controllers
 {
@@ -8,9 +10,12 @@ namespace Micro.Sinhro.REST.Student.Controllers
     public class StudentsController : Controller
     {
         private readonly StudentDbContext context;
-        public StudentsController(StudentDbContext context)
+        private readonly IMessageBroker broker;
+
+        public StudentsController(StudentDbContext context, IMessageBroker broker)
         {
             this.context = context;
+            this.broker = broker;
         }
 
         [HttpGet]
@@ -31,7 +36,30 @@ namespace Micro.Sinhro.REST.Student.Controllers
             context.SaveChanges();
             return Ok(student);
         }
-       
+        [HttpGet("pickGrades")]
+        public IActionResult PickGrades()
+        {
+            var result = broker.Consume();
+            var grades = JsonConvert.DeserializeObject<Models.Grade[]>(result);
+            foreach (var g in grades)
+            {
+                var student = context.Students.FirstOrDefault(s => s.Id == g.StudentId);
+                if(student.numGrades.HasValue)
+                {
+                     var sum = student.numGrades * student.avgGrade;
+                    student.numGrades++;
+                    sum += g.Value;
+                    student.avgGrade = sum / student.numGrades;
+
+                }
+                else
+                {
+                    student.numGrades = 1;
+                    student.avgGrade = g.Value;
+                }
+            }
+            return Ok("Updates" + grades.Count());
+        }
 
 
 
