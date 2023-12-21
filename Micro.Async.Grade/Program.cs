@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<GradeDBContext>(opt =>
-opt.UseSqlServer("Server=(LocalDB)\\MSSQLLocalDB;Database=GradeDB;Trusted_Connection=True;"));
+opt.UseSqlServer("Server=(LocalDB)\\MSSQLLocalDB;Database=GradeDB;Date Source:sqlserver;Trusted_Connection=True;User_ID:SA;PASSWORD:Dzejlana2392001"));
 builder.Services.AddScoped<IMessageBroker, MessageBroker>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
